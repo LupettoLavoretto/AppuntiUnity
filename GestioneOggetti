@@ -1,0 +1,35 @@
+    //Per permettermi di associare publicamente un oggetto dal transform, e usarlo.
+    public GameObject projectilePrefab;
+
+    //Come attivo o disattivo un oggetto? 
+    public GameObject firstPlayerCam;
+    public GameObject secondPlayerCam;
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Così all'inizio ho la panoramica della pista
+        firstPlayerCam.SetActive(true);
+        secondPlayerCam.SetActive(false);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+
+        firstPlayerCam.SetActive(true);
+        secondPlayerCam.SetActive(false);
+                }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+        firstPlayerCam.SetActive(false);
+        secondPlayerCam.SetActive(true);
+                }        
+    }
+
+    //Script per far sparare la il prefab
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            //Instantiate: copia del GameObject selezionato.
+            //Gli assegna poi la posizione del giocatore e la rotazione prevista dal prefab dell'oggetto
+            Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+        }  

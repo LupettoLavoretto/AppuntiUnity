@@ -1,0 +1,55 @@
+public class PlayerController : MonoBehaviour
+{
+
+    //Imposto velocità e direzione
+    public float speed = 20.0f;
+    public float turnSpeed;
+    private float horizontalInput;
+    private float forwardInput;
+
+    //Imposto manualmente i limiti di spostamento di un oggetto (o uso questi limiti per distruggerlo quando vengono superati)
+    public float xRange = 10.0f;
+    public float zRange = 3.0f;
+
+    //Un modo per avere un ID diverso se ho più di un giocatore.
+    public string inputID;
+
+
+
+
+    void MovimentoInputGetAxis(){
+        //Move the veichle forward, con selezione del diverso giocatore
+        horizontalInput = Input.GetAxis("Horizontal"+ inputID);
+        forwardInput = Input.GetAxis("Vertical"+ inputID);
+
+
+        //Se lascio solo Vector3, di fatto avanza di frame in frame (quello che fa update), e la velocità dipende molto dalla capacità di elaborazione del pc: + potente, + veloce.
+        //Time.deltaTime spinge a un metro al secondo di default.
+        //Possiamo aumentare la velocità con un altro valore.
+        transform.Translate(Vector3.forward * Time.deltaTime * speed * forwardInput);
+        // All'inizio abbiamo utilizzato questa funzione: transform.Translate(Vector3.right * Time.deltaTime * turnSpeed* horizontalInput);
+        // Questa funzione ci permette di spostarci orizzontalmente, ma quando si tratta di uno spostamento di un oggetto che avanza (persona, macchina) non ci spostiamo orizzontalmente: continuiamo ad avanzare e ruotiamo la nostra prospettiva.
+        //L'asse che rimane stabile è quello verticale, Y, che qui è quindi "up".
+        //La logica quindi diventa: mentre continui ad andare avanti, modifica i parametri attorno all'asse verticale, creando una rotazione.
+        transform.Rotate(Vector3.up, turnSpeed * horizontalInput * Time.deltaTime);
+
+        //Se voglio che un oggetto si muova in una direzione sempre, senza input:
+        transform.Translate(Vector3.forward * Time.deltaTime * speed);
+
+    }
+
+    void LimitareRangeSpostamento(){
+
+        //Evito che il personaggio esca dallo schermo sull'asse delle x. Vale ovviamente per tutti e tre gli assi.
+        if (transform.position.x < -xRange)
+        {
+            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
+        }
+
+        if (transform.position.x > xRange)
+        {
+            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
+        }
+    }
+
+}
